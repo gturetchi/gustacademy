@@ -26,7 +26,7 @@ export default function Loader() {
       style={{ opacity: n === 100 ? 0 : 1 }}
     >
       <img src="/logo/gust_academy_logo_white.svg" alt="Gust Academy" className="h-[70vh] w-auto" />
-      <span className="absolute top-[calc(50%+18vh+1rem)] text-sm tabular-nums">{n}</span>
+      <span className="absolute top-[calc(50%+18vh+1rem)] font-mono text-sm tabular-nums">{n}</span>
     </div>
   );
 }

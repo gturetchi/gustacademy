@@ -8,29 +8,39 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-julius);
+  --font-display: var(--font-breathing);
+  --font-mono: var(--font-courier);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--background); /* also what Safari tints its tab bar / overscroll with */
+  overscroll-behavior: none; /* no rubber-band bounce at the ends of the page */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-julius), sans-serif;
   margin: 0;
 }
 
-@media (pointer: fine) {
-  body:not(:has(#loader)) * {
-    cursor: none !important;
-  }
-  body:has(#loader) .scroll-cursor {
-    display: none !important;
-  }
+.ring {
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.detail {
+  animation: rise 0.6s both;
+}
+/* ponytail: delay matches Loader timing (2s count + 0.5s hold + 0.5s fade); expose a loaded flag if Loader changes */
+.carousel-in {
+  animation: rise 0.9s 2.5s both;
+}
+/* navbar: hovering one menu item blurs the others */
+.menu li { transition: filter 0.3s, opacity 0.3s, transform 0.5s ease-in-out; } /* transform: the arrow li glides between items */
+.menu:hover li:not(:hover) { filter: blur(2px); opacity: 0.5; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ring, .detail, .carousel-in { transition: none; animation: none; }
 }

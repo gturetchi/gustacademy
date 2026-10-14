@@ -1,23 +1,22 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
+import { Courier_Prime } from "next/font/google";
 import "./globals.css";
 import Loader from "./loader";
-import Cursor from "./cursor";
+import Navbar from "./navbar";
+import Transition from "./transition";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const julius = localFont({ src: "./fonts/JuliusSansOne-Regular.ttf", variable: "--font-julius" });
+const breathing = localFont({ src: "./fonts/Breathing.ttf", variable: "--font-breathing" });
+const courier = Courier_Prime({ weight: ["400", "700"], subsets: ["latin"], variable: "--font-courier" });
 
 export const metadata: Metadata = {
   title: "Gust Academy",
   description: "Școala cu Gust - Cursuri de arhitectură, design, artă și gust!",
 };
+
+// browser chrome (Safari tab bar / toolbar) takes this colour
+export const viewport: Viewport = { themeColor: "#980001" };
 
 export default function RootLayout({
   children,
@@ -27,11 +26,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${julius.variable} ${breathing.variable} ${courier.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Loader />
-        <Cursor />
+        <Navbar />
+        <Transition />
         {children}
       </body>
     </html>
