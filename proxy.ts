@@ -23,8 +23,7 @@ export async function proxy(req: NextRequest) {
   }
 
   if (langs.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`))) return;
-  const en = req.headers.get("accept-language")?.toLowerCase().startsWith("en");
-  req.nextUrl.pathname = `/${en ? "en" : "ro"}${pathname === "/" ? "" : pathname}`;
+  req.nextUrl.pathname = `/ro${pathname === "/" ? "" : pathname}`;
   return NextResponse.redirect(req.nextUrl);
 }
 

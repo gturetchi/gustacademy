@@ -8,10 +8,11 @@ import type { Course } from "../../lib/courses";
 
 // Ported from huyml.co's stack shader: pages along Z, wrapped, neighbours pushed off the focus.
 const U = 110; // px per scene unit
-const W = 3.744 * U;
-const H = 2.808 * U;
 const SP = 0.6; // page spacing: gap between unfocused cards
-const PUSH = 3.1; // extra room around the focused card: item-item-item (gap) main (gap) item-item-item
+const PUSH = 3.1; // desktop; mobile uses PUSH_M
+const PUSH_M = 2.5; // phones: neighbours sit in the screen corners (top-right / bottom-left), half cropped
+const KY_M = 1.3; // phones: steeper diagonal, the screen is tall and narrow
+// extra room around the focused card: item-item-item (gap) main (gap) item-item-item
 const KX = 0.7; // diagonal: bottom-left -> top-right, units per z unit
 const KY = 1;
 const ROW = 150; // right roller row height (px)
@@ -40,6 +41,12 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
   const N = items.length;
   const MAXZ = (N * SP) / 2; // must be N*SP/2 so the loop wraps seamlessly
   const [active, setActive] = useState(0);
+  const [mobile, setMobile] = useState(false); // set after mount so the server markup matches
+  useEffect(() => setMobile(matchMedia("(max-width: 767px)").matches), []);
+  const W = (mobile ? 2.3 : 3.744) * U;
+  const H = (mobile ? 1.725 : 2.808) * U;
+  const push = mobile ? PUSH_M : PUSH;
+  const ky = mobile ? KY_M : KY;
   const root = useRef<HTMLElement>(null);
   const cards = useRef<(HTMLLIElement | null)[]>([]);
   const rows = useRef<(HTMLLIElement | null)[]>([]);
@@ -77,9 +84,9 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
         if (!el) return;
         const flat = ((((SP * (p - i) + MAXZ) % (2 * MAXZ)) + 2 * MAXZ) % (2 * MAXZ)) - MAXZ;
         const d = Math.abs(flat);
-        const z = flat + Math.sign(flat || 1) * smooth(0.1, SP * 0.9, d) * PUSH;
+        const z = flat + Math.sign(flat || 1) * smooth(0.1, SP * 0.9, d) * push;
         const focus = 1 - smooth(0, SP * 0.8, d);
-        el.style.transform = `translate3d(${z * KX * U}px,${-z * KY * U}px,0) rotateY(${-12 - 8 * Math.sign(flat) * (1 - focus)}deg) rotateX(3deg)`;
+        el.style.transform = `translate3d(${z * KX * U}px,${-z * ky * U}px,0) rotateY(${-12 - 8 * Math.sign(flat) * (1 - focus)}deg) rotateX(3deg)`;
         // deck order via z-index (flat, no 3D depth). Upcoming cards (flat < 0): the further, the more in front, and the one travelling to the stage stays behind them
         // until it reaches the centre, so it never flips order while still overlapping another card. Previous cards: nearest on top.
         el.style.zIndex = String(Math.round(300 * (flat < 0 ? d - 2 * SP : -d)));
@@ -120,7 +127,7 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
       removeEventListener("keydown", onKey);
       removeEventListener("wheel", onWheel);
     };
-  }, [N, MAXZ]);
+  }, [N, MAXZ, push, ky]);
 
   // first-load fade-in only: after a page transition the curtain already hides the load, so show the page as is
   const intro = typeof document === "undefined" || !document.documentElement.dataset.nav;
@@ -139,7 +146,7 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
       onPointerMove={(e) => {
         if (drag.current === null) return;
         moved.current += Math.abs(drag.current - e.clientX);
-        nudge((drag.current - e.clientX) * 0.006);
+        nudge((drag.current - e.clientX) * (e.pointerType === "touch" ? -0.016 : 0.006)); // touch: ~60px per card
         drag.current = e.clientX;
       }}
       onPointerUp={() => {
@@ -165,16 +172,20 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
               className="group absolute flex items-end overflow-hidden p-4 font-display text-4xl text-white"
               style={{ width: W, height: H, left: -W / 2, top: -H / 2 }}
             >
-              {(() => {
+              {c.blurred ? (
+                <div className="absolute inset-0 flex items-center justify-center bg-white p-4 text-center font-mono text-xs uppercase tracking-widest text-[#980001] md:text-sm">
+                  {t.soon}
+                </div>
+              ) : (
+                (() => {
                 const img = (
-                  <img src={c.cover} alt="" draggable={false} className={`absolute inset-0 h-full w-full object-cover transition-[scale] duration-300 group-hover:scale-110${c.blurred ? " blur-2xl" : ""}`} style={{ transform: "scale(var(--zoom, 1))" }} />
+                  <img src={c.cover} alt="" draggable={false} className={`absolute inset-0 h-full w-full object-cover transition-[scale] duration-300 group-hover:scale-110`} style={{ transform: "scale(var(--zoom, 1))" }} />
                 );
-                return c.blurred ? (
-                  <div className="absolute inset-0">{img}</div>
-                ) : (
+                return (
                   <Link href={`/${lang}/courses/${c.slug}`} draggable={false} aria-label={c.title} className="absolute inset-0">{img}</Link>
                 );
-              })()}
+              })()
+              )}
             </li>
           ))}
         </ul>
@@ -189,11 +200,11 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
 
       {/* counter */}
       <div
-        className="absolute z-10 [filter:blur(var(--blur,0px))] left-36 -mt-4 flex items-end gap-3 p-4 text-white"
-        style={{ top: `calc(50% + ${2 * ROW - 48}px)` }} // same level as the last visible row of the right list (-mt-12 offset)
+        className="absolute z-10 [filter:blur(var(--blur,0px))] left-2 top-28 md:left-36 md:top-[var(--t)] md:-mt-4 flex items-end gap-3 p-4 text-white"
+        style={{ "--t": `calc(50% + ${2 * ROW - 48}px)` } as React.CSSProperties} // same level as the last visible row of the right list (-mt-12 offset)
         aria-live="polite"
       >
-        <span className="font-mono text-[10px] uppercase tracking-wider opacity-60">{t.selected}</span>
+        <span className="hidden font-mono text-[10px] uppercase tracking-wider opacity-60 md:inline">{t.selected}</span>
         <span className="font-display text-[64px] leading-none tabular-nums md:text-[96px]">{pad(active + 1)}</span>
         <span className="pb-3 font-mono text-[10px] tabular-nums">/{pad(N)}</span>
       </div>
@@ -226,6 +237,13 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
           </li>
         ))}
       </ul>
+
+      {/* phones: the roller is hidden, so the selected course's details sit at the bottom */}
+      <div key={`m${active}`} className="detail absolute inset-x-6 z-10 text-center [filter:blur(var(--blur,0px))] md:hidden" style={{ top: `calc(50% + ${H / 2 + 150}px)` }}>
+        <span className="block font-mono text-xs uppercase tracking-wider">{it.blurred ? MASK : it.teacher}</span>
+        <span className="mt-1 block text-2xl uppercase tracking-wide">{it.blurred ? <Glitch len={Math.max(it.title.length, 6)} /> : it.title}</span>
+        <span className="mt-2 block font-mono text-xs leading-5">{it.blurred ? MASK : it.text}</span>
+      </div>
 
       <p className="absolute bottom-3 left-6 font-mono text-[10px] uppercase tracking-wider opacity-60">{t.scroll}</p>
     </main>

@@ -33,7 +33,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
           </p>
           <List items={team.slice(0, 3)} align="text-center lg:text-right" />
         </div>
-        <div className="relative w-full max-w-[42.67rem]">
+        <div className="relative mt-16 w-4/5 max-w-[42.67rem] lg:mt-0 lg:w-full">
           {/* logo behind the figures, rising above their heads */}
           <img
             src="/logo/gust_academy_logo_black_cropped.svg"

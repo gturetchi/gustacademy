@@ -38,9 +38,20 @@ body {
 /* navbar: hovering one menu item blurs the others */
 .menu li { transition: filter 0.3s, opacity 0.3s, transform 0.5s ease-in-out; } /* transform: the arrow li glides between items */
 .menu:hover li:not(:hover) { filter: blur(2px); opacity: 0.5; }
+/* mobile burger panel: opacity ramps up fast, text tilts up out of a blur, group by group */
+.burger { animation: fade 0.18s ease-out both; }
+.burger > * { transform-origin: 0 100%; animation: unblur 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.burger > :nth-child(2) { animation-delay: 0.06s; }
+.burger > :nth-child(3) { animation-delay: 0.12s; }
+@keyframes fade {
+  from { opacity: 0; }
+}
+@keyframes unblur {
+  from { opacity: 0; filter: blur(8px); transform: translateY(14px) rotate(-3deg); }
+}
 @keyframes rise {
   from { opacity: 0; transform: translateY(24px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ring, .detail, .carousel-in { transition: none; animation: none; }
+  .ring, .detail, .carousel-in, .burger, .burger > * { transition: none; animation: none; }
 }
