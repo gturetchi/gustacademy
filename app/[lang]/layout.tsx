@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Courier_Prime } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import Loader from "./loader";
 import Navbar from "./navbar";
 import Transition from "./transition";
+import { langs, type Lang } from "../../lib/i18n";
 
-const julius = localFont({ src: "./fonts/JuliusSansOne-Regular.ttf", variable: "--font-julius" });
-const breathing = localFont({ src: "./fonts/Breathing.ttf", variable: "--font-breathing" });
+const julius = localFont({ src: "../fonts/JuliusSansOne-Regular.ttf", variable: "--font-julius" });
+const breathing = localFont({ src: "../fonts/Breathing.ttf", variable: "--font-breathing" });
 const courier = Courier_Prime({ weight: ["400", "700"], subsets: ["latin"], variable: "--font-courier" });
 
 export const metadata: Metadata = {
@@ -18,14 +19,20 @@ export const metadata: Metadata = {
 // browser chrome (Safari tab bar / toolbar) takes this colour
 export const viewport: Viewport = { themeColor: "#980001" };
 
-export default function RootLayout({
+export const generateStaticParams = () => langs.map((lang) => ({ lang }));
+export const dynamicParams = false; // unknown /xx prefixes 404
+
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }>) {
+  const lang = (await params).lang as Lang;
   return (
     <html
-      lang="en"
+      lang={lang}
       className={`${julius.variable} ${breathing.variable} ${courier.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

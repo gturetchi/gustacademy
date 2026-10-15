@@ -3,9 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { playFlip, playHover } from "./audio";
-import { items } from "./courses";
-
-const N = items.length;
+import { dict, type Lang } from "../../lib/i18n";
+import type { Course } from "../../lib/courses";
 
 // Ported from huyml.co's stack shader: pages along Z, wrapped, neighbours pushed off the focus.
 const U = 110; // px per scene unit
@@ -17,14 +16,16 @@ const KX = 0.7; // diagonal: bottom-left -> top-right, units per z unit
 const KY = 1;
 const ROW = 150; // right roller row height (px)
 const SIDE = 0.35; // opacity of every non-selected roller row; only 2 above + 2 below are shown
-const MAXZ = (N * SP) / 2; // must be N*SP/2 so the loop wraps seamlessly
 const smooth = (a: number, b: number, x: number) => {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
   return t * t * (3 - 2 * t);
 };
-const wrapDelta = (d: number) => ((((d + N / 2) % N) + N) % N) - N / 2;
+const wrapDelta = (d: number, N: number) => ((((d + N / 2) % N) + N) % N) - N / 2;
 
-export default function Carousel() {
+export default function Carousel({ items, lang }: { items: Course[]; lang: Lang }) {
+  const t = dict[lang];
+  const N = items.length;
+  const MAXZ = (N * SP) / 2; // must be N*SP/2 so the loop wraps seamlessly
   const [active, setActive] = useState(0);
   const root = useRef<HTMLElement>(null);
   const cards = useRef<(HTMLLIElement | null)[]>([]);
@@ -74,7 +75,7 @@ export default function Carousel() {
       });
       rows.current.forEach((el, i) => {
         if (!el) return;
-        const d = wrapDelta(i - p);
+        const d = wrapDelta(i - p, N);
         el.style.transform = `translateY(${d * ROW}px)`;
         const a = Math.abs(d);
         el.style.pointerEvents = a > 2.5 ? "none" : "auto"; // faded-out rows aren't interactive
@@ -106,11 +107,12 @@ export default function Carousel() {
       removeEventListener("keydown", onKey);
       removeEventListener("wheel", onWheel);
     };
-  }, []);
+  }, [N, MAXZ]);
 
   // first-load fade-in only: after a page transition the curtain already hides the load, so show the page as is
   const intro = typeof document === "undefined" || !document.documentElement.dataset.nav;
   const it = items[active];
+  if (!it) return null;
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
@@ -150,8 +152,8 @@ export default function Carousel() {
               className="group absolute flex items-end overflow-hidden p-4 font-display text-4xl text-white"
               style={{ width: W, height: H, left: -W / 2, top: -H / 2 }}
             >
-              <Link href={`/courses/${c.slug}`} draggable={false} aria-label={c.title} className="absolute inset-0">
-                <img src="/teachers/template-photo.jpg" alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover transition-[scale] duration-300 group-hover:scale-110" style={{ transform: "scale(var(--zoom, 1))" }} />
+              <Link href={`/${lang}/courses/${c.slug}`} draggable={false} aria-label={c.title} className="absolute inset-0">
+                <img src={c.cover} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover transition-[scale] duration-300 group-hover:scale-110" style={{ transform: "scale(var(--zoom, 1))" }} />
               </Link>
             </li>
           ))}
@@ -160,9 +162,9 @@ export default function Carousel() {
 
       {/* left meta */}
       <dl key={active} className="detail absolute z-10 [filter:blur(var(--blur,0px))] left-6 top-[43%] hidden grid-cols-[6rem_1fr] gap-x-4 gap-y-6 font-mono text-[10px] uppercase tracking-wider md:grid">
-        <dt className="opacity-60">Starting date</dt><dd>{it.start}</dd>
-        <dt className="opacity-60">Lessons</dt><dd>{it.lessons} / {+(it.hours / it.lessons).toFixed(1)}h</dd>
-        <dt className="opacity-60">Weeks</dt><dd>{it.weeks}</dd>
+        <dt className="opacity-60">{t.startDate}</dt><dd>{it.start}</dd>
+        <dt className="opacity-60">{t.lessons}</dt><dd>{it.lessons} / {+(it.hours / it.lessons).toFixed(1)}h</dd>
+        <dt className="opacity-60">{t.weeks}</dt><dd>{it.weeks}</dd>
       </dl>
 
       {/* counter */}
@@ -171,7 +173,7 @@ export default function Carousel() {
         style={{ top: `calc(50% + ${2 * ROW - 48}px)` }} // same level as the last visible row of the right list (-mt-12 offset)
         aria-live="polite"
       >
-        <span className="font-mono text-[10px] uppercase tracking-wider opacity-60">Selected work</span>
+        <span className="font-mono text-[10px] uppercase tracking-wider opacity-60">{t.selected}</span>
         <span className="font-display text-[64px] leading-none tabular-nums md:text-[96px]">{pad(active + 1)}</span>
         <span className="pb-3 font-mono text-[10px] tabular-nums">/{pad(N)}</span>
       </div>
@@ -187,7 +189,7 @@ export default function Carousel() {
             data-click
             className="absolute left-0 top-0 -mt-12 w-full"
           >
-            <Link href={`/courses/${c.slug}`} draggable={false} className="block text-left">
+            <Link href={`/${lang}/courses/${c.slug}`} draggable={false} className="block text-left">
               <span className="block font-mono text-xs uppercase tracking-wider">{c.teacher}</span>
               <span className="mt-1 block text-3xl uppercase tracking-wide">{c.title}</span>
               <span className="mt-2 block font-mono text-xs leading-5">{c.text}</span>
@@ -196,7 +198,7 @@ export default function Carousel() {
         ))}
       </ul>
 
-      <p className="absolute bottom-3 left-6 font-mono text-[10px] uppercase tracking-wider opacity-60">Scroll</p>
+      <p className="absolute bottom-3 left-6 font-mono text-[10px] uppercase tracking-wider opacity-60">{t.scroll}</p>
     </main>
   );
 }

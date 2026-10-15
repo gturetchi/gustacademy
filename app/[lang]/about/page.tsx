@@ -1,14 +1,5 @@
 import Image from "next/image";
-
-const team: [string, string][] = [
-  ["Eugeniu Reabenchii", "Fashion Design"],
-  ["Sergiu Tronciu", "Arhitectură"],
-  ["Gabriel Turețchi", "IT"],
-  ["Alexandru Fana", "3D"],
-  ["Alexandru Frunze", "Artă"],
-  ["Valentin Railean", "Tipar"],
-  ["Victor Gandrabur", "Voce"],
-];
+import { dict, type Lang } from "../../../lib/i18n";
 
 const List = ({
   items,
@@ -30,13 +21,15 @@ const List = ({
   </ul>
 );
 
-export default function Page() {
+export default async function Page({ params }: { params: Promise<{ lang: string }> }) {
+  const t = dict[(await params).lang as Lang];
+  const team = t.team;
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[#980001] px-6 pb-10 pt-32 text-white">
       <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:justify-center">
         <div className="flex flex-col gap-6 text-center lg:text-right">
           <p className="font-mono text-xs uppercase leading-5 tracking-wider lg:w-52">
-            Suntem diferiți dar avem gust pentru:
+            {t.aboutIntro}
           </p>
           <List items={team.slice(0, 3)} align="text-center lg:text-right" />
         </div>
@@ -66,7 +59,7 @@ export default function Page() {
       </div>
       <section className="flex max-w-[42.67rem] flex-col items-center gap-3 text-center">
         <p className="font-mono text-xs leading-5 text-white/80">
-          Formăm gustul împreună
+          {t.aboutOutro}
         </p>
       </section>
     </main>
