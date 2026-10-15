@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Courier_Prime } from "next/font/google";
+import Script from "next/script";
 import "../globals.css";
 import Loader from "./loader";
 import Navbar from "./navbar";
@@ -40,6 +41,10 @@ export default async function RootLayout({
         <Navbar />
         <Transition />
         {children}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-ZRSSNXWX5X" strategy="afterInteractive" />
+        <Script id="ga" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZRSSNXWX5X');`}
+        </Script>
       </body>
     </html>
   );
