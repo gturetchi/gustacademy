@@ -14,7 +14,7 @@ const hrefs = ["/", "/contacts", "/about"];
 const ROW = 24; // menu row pitch in px (20px line + 4px gap), drives the arrow position
 
 export default function Navbar() {
-  const [audio, setAudioOn] = useState(true);
+  const [audio, setAudioOn] = useState(false);
   const full = usePathname();
   const lang = full.split("/")[1] as Lang;
   const pathname = full.slice(lang.length + 1) || "/"; // path without the /ro or /en prefix
