@@ -9,6 +9,10 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
       <div className="flex flex-col items-center gap-1 font-mono text-sm tracking-wider">
         <a href="mailto:gustacademy@gmail.com">gustacademy@gmail.com</a>
         <a href="tel:+37360000154">+373 60 000 154</a>
+        <div className="flex gap-4">
+          <a href="https://www.instagram.com/gustacademy/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.facebook.com/people/Gust-Academy/61590423211565" target="_blank" rel="noopener noreferrer">Facebook</a>
+        </div>
       </div>
       <Form lang={lang} />
     </main>

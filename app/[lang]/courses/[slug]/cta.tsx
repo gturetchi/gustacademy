@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { track } from "../../track";
 import { dict, type Lang } from "../../../../lib/i18n";
 
 // Closing block under the photos. While it rises into view it sets --end (0 -> 1) on <html>,
@@ -26,6 +27,18 @@ export default function Cta({ children, next, lang }: { children: string; next: 
       document.documentElement.style.removeProperty("--end");
     };
   }, []);
+
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      track("course_cta_view", { course: location.pathname.split("/").pop(), lang });
+      io.disconnect();
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [lang]);
 
   return (
     <section ref={box} className="flex min-h-[70vh] w-full max-w-6xl flex-col items-center justify-center gap-32 py-16 text-center">

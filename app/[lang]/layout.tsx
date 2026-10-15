@@ -1,3 +1,4 @@
+import Track from "./track";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Courier_Prime } from "next/font/google";
@@ -38,6 +39,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Loader />
+        <Track lang={lang} />
         <Navbar />
         <Transition />
         {children}

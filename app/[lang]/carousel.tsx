@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { playFlip, playHover } from "./audio";
+import { track } from "./track";
 import { dict, type Lang } from "../../lib/i18n";
 import type { Course } from "../../lib/courses";
 
@@ -131,6 +132,13 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
 
   // first-load fade-in only: after a page transition the curtain already hides the load, so show the page as is
   const intro = typeof document === "undefined" || !document.documentElement.dataset.nav;
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    const id = setTimeout(() => track("carousel_browse", { course: items[active]?.slug, index: active }), 600); // only cards the visitor rests on
+    return () => clearTimeout(id);
+  }, [active, items]);
+
   const it = items[active];
   if (!it) return null;
   const pad = (n: number) => String(n).padStart(2, "0");

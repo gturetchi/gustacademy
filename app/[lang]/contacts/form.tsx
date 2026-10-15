@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
+import { lastCourse, track } from "../track";
 import { submit } from "./actions";
 import { dict, type Lang } from "../../../lib/i18n";
 
@@ -11,9 +12,20 @@ const field =
 export default function Form({ lang }: { lang: Lang }) {
   const t = dict[lang].form;
   const [state, action, pending] = useActionState(submit, null);
+  const started = useRef(false);
+  useEffect(() => {
+    if (state?.ok) track("generate_lead", { lang, course: lastCourse() });
+    else if (state?.error) track("form_error", { lang, error: state.error });
+  }, [state, lang]);
   if (state?.ok) return <p className="font-mono text-sm uppercase tracking-wider">{t.thanks}</p>;
   return (
-    <form action={action} className="flex w-full max-w-md flex-col gap-4">
+    <form
+      action={action}
+      onFocus={() => {
+        if (!started.current) track("form_start", { lang, course: lastCourse() });
+        started.current = true;
+      }}
+      className="flex w-full max-w-md flex-col gap-4">
       <input type="hidden" name="lang" value={lang} />
       <input name="firstName" required placeholder={t.first} autoComplete="given-name" className={field} />
       <input name="lastName" required placeholder={t.last} autoComplete="family-name" className={field} />
