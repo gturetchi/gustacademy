@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   return (
     <>
       <Link href="/admin" className="underline">← Courses</Link>
-      <Form slug={isNew ? "" : slug} lock={!isNew} published={isNew || r.published !== false} fields={fields} />
+      <Form slug={isNew ? "" : slug} lock={!isNew} published={isNew || r.published !== false} blurred={!!r.blurred} fields={fields} />
       {isNew ? (
         <p className="mt-10 text-xs opacity-60">Save the course first, then add images.</p>
       ) : (

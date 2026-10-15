@@ -22,6 +22,19 @@ const smooth = (a: number, b: number, x: number) => {
 };
 const wrapDelta = (d: number, N: number) => ((((d + N / 2) % N) + N) % N) - N / 2;
 
+const GLYPHS = "█▓▒░#@%&$/\\<>[]{}=+*~?!01";
+const MASK = "******";
+
+// constantly re-rolled artifact text; starts as blocks so server and client markup match
+function Glitch({ len }: { len: number }) {
+  const [s, setS] = useState("█".repeat(len));
+  useEffect(() => {
+    const id = setInterval(() => setS(Array.from({ length: len }, () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]).join("")), 90);
+    return () => clearInterval(id);
+  }, [len]);
+  return <>{s}</>;
+}
+
 export default function Carousel({ items, lang }: { items: Course[]; lang: Lang }) {
   const t = dict[lang];
   const N = items.length;
@@ -152,9 +165,16 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
               className="group absolute flex items-end overflow-hidden p-4 font-display text-4xl text-white"
               style={{ width: W, height: H, left: -W / 2, top: -H / 2 }}
             >
-              <Link href={`/${lang}/courses/${c.slug}`} draggable={false} aria-label={c.title} className="absolute inset-0">
-                <img src={c.cover} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover transition-[scale] duration-300 group-hover:scale-110" style={{ transform: "scale(var(--zoom, 1))" }} />
-              </Link>
+              {(() => {
+                const img = (
+                  <img src={c.cover} alt="" draggable={false} className={`absolute inset-0 h-full w-full object-cover transition-[scale] duration-300 group-hover:scale-110${c.blurred ? " blur-2xl" : ""}`} style={{ transform: "scale(var(--zoom, 1))" }} />
+                );
+                return c.blurred ? (
+                  <div className="absolute inset-0">{img}</div>
+                ) : (
+                  <Link href={`/${lang}/courses/${c.slug}`} draggable={false} aria-label={c.title} className="absolute inset-0">{img}</Link>
+                );
+              })()}
             </li>
           ))}
         </ul>
@@ -162,9 +182,9 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
 
       {/* left meta */}
       <dl key={active} className="detail absolute z-10 [filter:blur(var(--blur,0px))] left-6 top-[43%] hidden grid-cols-[6rem_1fr] gap-x-4 gap-y-6 font-mono text-[10px] uppercase tracking-wider md:grid">
-        <dt className="opacity-60">{t.startDate}</dt><dd>{it.start}</dd>
-        <dt className="opacity-60">{t.lessons}</dt><dd>{it.lessons} / {+(it.hours / it.lessons).toFixed(1)}h</dd>
-        <dt className="opacity-60">{t.weeks}</dt><dd>{it.weeks}</dd>
+        <dt className="opacity-60">{t.startDate}</dt><dd>{it.blurred ? MASK : it.start}</dd>
+        <dt className="opacity-60">{t.lessons}</dt><dd>{it.blurred ? MASK : `${it.lessons} / ${+(it.hours / it.lessons).toFixed(1)}h`}</dd>
+        <dt className="opacity-60">{t.weeks}</dt><dd>{it.blurred ? MASK : it.weeks}</dd>
       </dl>
 
       {/* counter */}
@@ -189,11 +209,20 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
             data-click
             className="absolute left-0 top-0 -mt-12 w-full"
           >
-            <Link href={`/${lang}/courses/${c.slug}`} draggable={false} className="block text-left">
-              <span className="block font-mono text-xs uppercase tracking-wider">{c.teacher}</span>
-              <span className="mt-1 block text-3xl uppercase tracking-wide">{c.title}</span>
-              <span className="mt-2 block font-mono text-xs leading-5">{c.text}</span>
-            </Link>
+            {(() => {
+              const body = (
+                <>
+                  <span className="block font-mono text-xs uppercase tracking-wider">{c.blurred ? MASK : c.teacher}</span>
+                  <span className="mt-1 block text-3xl uppercase tracking-wide">{c.blurred ? <Glitch len={Math.max(c.title.length, 6)} /> : c.title}</span>
+                  <span className="mt-2 block font-mono text-xs leading-5">{c.blurred ? MASK : c.text}</span>
+                </>
+              );
+              return c.blurred ? (
+                <div className="block text-left">{body}</div>
+              ) : (
+                <Link href={`/${lang}/courses/${c.slug}`} draggable={false} className="block text-left">{body}</Link>
+              );
+            })()}
           </li>
         ))}
       </ul>

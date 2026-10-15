@@ -10,6 +10,7 @@ export type Row = {
   teacher: string;
   price: string;
   published: boolean;
+  blurred: boolean;
   cover: string | null;
   gallery: string[];
 } & Record<(typeof numFields)[number], number> &
@@ -24,6 +25,7 @@ export async function getCourses(lang: Lang) {
     slug: r.slug,
     teacher: r.teacher,
     price: r.price,
+    blurred: r.blurred,
     lessons: r.lessons,
     weeks: r.weeks,
     hours: r.hours,

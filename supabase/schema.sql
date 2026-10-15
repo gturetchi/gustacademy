@@ -3,6 +3,7 @@ create table courses (
   slug text primary key,
   position int not null default 0,
   published boolean not null default true,
+  blurred boolean not null default false,  -- teaser: blurred photo, masked text, no detail page
   teacher text not null default '',
   price text not null default '',
   lessons int not null default 0,

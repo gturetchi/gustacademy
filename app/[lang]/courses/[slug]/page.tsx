@@ -11,7 +11,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
   const { slug } = await params;
   const lang = (await params).lang as Lang;
   const t = dict[lang];
-  const items = await getCourses(lang);
+  const items = (await getCourses(lang)).filter((i) => !i.blurred); // teasers have no detail page
   const c = items.find((i) => i.slug === slug);
   if (!c) notFound();
   return (

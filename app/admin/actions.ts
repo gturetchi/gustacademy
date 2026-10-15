@@ -30,6 +30,7 @@ export async function save(_: string | null, f: FormData) {
     teacher: s(f, "teacher"),
     price: s(f, "price"),
     published: f.get("published") === "on",
+    blurred: f.get("blurred") === "on",
   };
   for (const k of numFields) row[k] = Number(s(f, k)) || 0;
   for (const k of textFields) for (const l of langs) row[`${k}_${l}`] = s(f, `${k}_${l}`);
