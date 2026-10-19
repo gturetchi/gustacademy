@@ -5,7 +5,8 @@ import BigTitle from "./big-title";
 import Cta from "./cta";
 import SmoothScroll from "./smooth-scroll";
 
-export const generateStaticParams = async () => (await getCourses("ro")).map(({ slug }) => ({ slug }));
+export const revalidate = 60; // a 404 cached before the course was published must not stick
+export const generateStaticParams =async () => (await getCourses("ro")).map(({ slug }) => ({ slug }));
 
 export default async function Page({ params }: { params: Promise<{ lang: string; slug: string }> }) {
   const { slug } = await params;
