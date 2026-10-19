@@ -18,7 +18,7 @@ export const dict = {
     description: "Descriere",
     teacher: "Profesor",
     price: "Preț",
-    cta: "Vino să guști cu noi",
+    cta: "Vino sa gusti cu noi",
     contactUs: "Scrie-ne",
     next: "Următorul curs",
     aboutIntro: "Suntem diferiți dar avem gust pentru:",
