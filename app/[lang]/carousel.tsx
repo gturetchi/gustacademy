@@ -247,7 +247,7 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
       </ul>
 
       {/* phones: the roller is hidden, so the selected course's details sit at the bottom */}
-      <div key={`m${active}`} className="detail absolute inset-x-6 z-10 text-center [filter:blur(var(--blur,0px))] md:hidden" style={{ top: `calc(50% + ${H / 2 + 150}px)` }}>
+      <div key={`m${active}`} className="detail absolute inset-x-6 z-10 text-center [filter:blur(var(--blur,0px))] md:hidden" style={{ top: `calc(50% + ${H / 2 + 90}px)` }}>
         <span className="block font-mono text-xs uppercase tracking-wider">{it.blurred ? MASK : it.teacher}</span>
         <span className="mt-1 block text-2xl uppercase tracking-wide">{it.blurred ? <Glitch len={Math.max(it.title.length, 6)} /> : it.title}</span>
         <span className="mt-2 block font-mono text-xs leading-5">{it.blurred ? MASK : it.text}</span>
