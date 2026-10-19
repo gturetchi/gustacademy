@@ -50,21 +50,11 @@ export async function remove(f: FormData) {
 const BUCKET = "courses";
 const MAX = 8 * 1024 * 1024;
 
-export async function uploadImage(_: string | null, f: FormData) {
+// files go browser -> Storage directly (Vercel caps action bodies at 4.5 MB); this only records the URLs
+export async function attachImages(slug: string, kind: string, urls: string[]) {
   const db = await requireAdmin();
-  const slug = s(f, "slug");
-  const kind = s(f, "kind");
-  const files = f.getAll("file").filter((x): x is File => x instanceof File && x.size > 0);
-  if (!files.length) return "Choose an image.";
-  const urls: string[] = [];
-  for (const file of files) {
-    if (!file.type.startsWith("image/")) return `${file.name}: not an image.`;
-    if (file.size > MAX) return `${file.name}: larger than 8 MB.`;
-    const path = `${slug}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-    const { error } = await db.storage.from(BUCKET).upload(path, file, { contentType: file.type });
-    if (error) return error.message;
-    urls.push(db.storage.from(BUCKET).getPublicUrl(path).data.publicUrl);
-  }
+  const prefix = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${slug}/`;
+  if (!urls.length || !urls.every((u) => u.startsWith(prefix))) return "Bad upload.";
   if (kind === "cover") {
     const { data: old } = await db.from("courses").select("cover").eq("slug", slug).single();
     const { error } = await db.from("courses").update({ cover: urls[0] }).eq("slug", slug);
