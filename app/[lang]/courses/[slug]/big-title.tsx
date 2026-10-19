@@ -26,7 +26,7 @@ export default function BigTitle({ children, red }: { children: string; red?: bo
       ref={el}
       aria-hidden={red || undefined}
       // 0.6em padding keeps the tall swashes inside the box, otherwise the blur filter clips them; the offsets cancel it
-      className={`pointer-events-none fixed bottom-[calc(14vh-0.6em)] right-[calc(1.5rem-0.6em)] z-10 max-w-[70vw] p-[0.6em] text-right font-display text-[clamp(2rem,6vw,6rem)] leading-[0.95] ${red ? "text-[#980001]" : "text-white"}`}
+      className={`pointer-events-none fixed bottom-[calc(14vh-0.6em)] right-[calc(1.5rem-0.6em)] z-10 w-[75vw] p-[0.6em] text-right font-display text-[2.75rem] md:w-auto md:max-w-[70vw] md:text-[clamp(2rem,6vw,6rem)] leading-[0.95] ${red ? "text-[#980001]" : "text-white"}`}
     >
       {children}
     </h1>
