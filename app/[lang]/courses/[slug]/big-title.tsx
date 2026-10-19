@@ -4,8 +4,9 @@ import { useEffect, useRef } from "react";
 
 const FADE = 240; // px of scroll over which the title blurs out
 
+// `red` is a copy meant to sit inside a clipped photo wrapper, so the title turns red only where it overlaps the photo.
 // Big display title pinned bottom-right; it blurs and fades away as soon as the page starts scrolling.
-export default function BigTitle({ children }: { children: string }) {
+export default function BigTitle({ children, red }: { children: string; red?: boolean }) {
   const el = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -23,8 +24,9 @@ export default function BigTitle({ children }: { children: string }) {
   return (
     <h1
       ref={el}
+      aria-hidden={red || undefined}
       // 0.6em padding keeps the tall swashes inside the box, otherwise the blur filter clips them; the offsets cancel it
-      className="pointer-events-none fixed bottom-[calc(14vh-0.6em)] right-[calc(1.5rem-0.6em)] z-10 max-w-[70vw] p-[0.6em] text-right font-display text-[clamp(2rem,6vw,6rem)] leading-[0.95] text-white"
+      className={`pointer-events-none fixed bottom-[calc(14vh-0.6em)] right-[calc(1.5rem-0.6em)] z-10 max-w-[70vw] p-[0.6em] text-right font-display text-[clamp(2rem,6vw,6rem)] leading-[0.95] ${red ? "text-[#980001]" : "text-white"}`}
     >
       {children}
     </h1>

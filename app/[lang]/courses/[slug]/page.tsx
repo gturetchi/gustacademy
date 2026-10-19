@@ -3,6 +3,7 @@ import { getCourses } from "../../../../lib/courses";
 import { dict, type Lang } from "../../../../lib/i18n";
 import BigTitle from "./big-title";
 import Cta from "./cta";
+import Minimap from "./minimap";
 import SmoothScroll from "./smooth-scroll";
 
 export const dynamic = "force-dynamic"; // a cached 404 from before publishing would stick on Vercel; one cheap query per view instead
@@ -17,11 +18,16 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
   return (
     <main className="flex min-h-screen flex-col items-center gap-8 bg-[#980001] px-6 pb-16 pt-40 text-white md:py-[22.5vh]">
       <SmoothScroll />
+      <Minimap />
       <BigTitle>{c.title}</BigTitle>
       {/* md+: first photo is centred on the viewport, on the same line as the meta block at the left */}
       <div className="flex w-full max-w-2xl flex-col gap-24">
         {(c.gallery.length ? c.gallery : [c.cover]).map((src, n) => (
-          <img key={src} src={src} alt={n ? "" : c.title} className="aspect-[4/3] w-full object-cover md:aspect-auto md:h-[55vh]" />
+          // clip-path also clips the fixed red title copy, so it shows only over the photo
+          <div key={src} className="relative z-20 [clip-path:inset(0)]">
+            <img src={src} alt={n ? "" : c.title} className="aspect-[4/3] w-full object-cover md:aspect-auto md:h-[55vh]" />
+            <BigTitle red>{c.title}</BigTitle>
+          </div>
         ))}
       </div>
       <Cta lang={lang} next={items[(items.indexOf(c) + 1) % items.length]}>{t.cta}</Cta>
