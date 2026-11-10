@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { plain } from "../../../../lib/i18n";
 
 const FADE = 240; // px of scroll over which the title blurs out
 
@@ -28,7 +29,7 @@ export default function BigTitle({ children, red }: { children: string; red?: bo
       // 0.6em padding keeps the tall swashes inside the box, otherwise the blur filter clips them; the offsets cancel it
       className={`pointer-events-none fixed bottom-[calc(14vh-0.6em)] right-[calc(1.5rem-0.6em)] z-10 w-[75vw] p-[0.6em] text-right font-display lowercase text-[2.75rem] md:w-auto md:max-w-[70vw] md:text-[clamp(2rem,6vw,6rem)] leading-[0.95] ${red ? "text-[#980001]" : "text-white"}`}
     >
-      {children}
+      {plain(children)}
     </h1>
   );
 }

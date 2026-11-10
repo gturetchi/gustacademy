@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { playFlip, playHover } from "./audio";
 import { track } from "./track";
-import { dict, type Lang } from "../../lib/i18n";
+import { dict, plain, type Lang } from "../../lib/i18n";
 import type { Course } from "../../lib/courses";
 
 // Ported from huyml.co's stack shader: pages along Z, wrapped, neighbours pushed off the focus.
@@ -232,7 +232,7 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
               const body = (
                 <>
                   <span className="block font-mono text-xs uppercase tracking-wider">{c.blurred ? MASK : c.teacher}</span>
-                  <span className="mt-1 block text-3xl uppercase tracking-wide">{c.blurred ? <Glitch len={Math.max(c.title.length, 6)} /> : c.title}</span>
+                  <span className="mt-1 block text-3xl uppercase tracking-wide">{c.blurred ? <Glitch len={Math.max(c.title.length, 6)} /> : plain(c.title)}</span>
                   <span className="mt-2 block font-mono text-xs leading-5">{c.blurred ? MASK : c.text}</span>
                 </>
               );
@@ -249,7 +249,7 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
       {/* phones: the roller is hidden, so the selected course's details sit at the bottom */}
       <div key={`m${active}`} className="detail absolute inset-x-6 z-10 text-center [filter:blur(var(--blur,0px))] md:hidden" style={{ top: `calc(50% + ${H / 2 + 90}px)` }}>
         <span className="block font-mono text-xs uppercase tracking-wider">{it.blurred ? MASK : it.teacher}</span>
-        <span className="mt-1 block text-2xl uppercase tracking-wide">{it.blurred ? <Glitch len={Math.max(it.title.length, 6)} /> : it.title}</span>
+        <span className="mt-1 block text-2xl uppercase tracking-wide">{it.blurred ? <Glitch len={Math.max(it.title.length, 6)} /> : plain(it.title)}</span>
         <span className="mt-2 block font-mono text-xs leading-5">{it.blurred ? MASK : it.text}</span>
       </div>
 

@@ -112,3 +112,6 @@ export const dict = {
     ] as [string, string][],
   },
 };
+
+// Breathing / Julius Sans have no ă î â ș ț glyphs: drop the accents for text set in them.
+export const plain = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "");

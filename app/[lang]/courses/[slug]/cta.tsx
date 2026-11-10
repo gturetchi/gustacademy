@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { track } from "../../track";
-import { dict, type Lang } from "../../../../lib/i18n";
+import { dict, plain, type Lang } from "../../../../lib/i18n";
 
 // Closing block under the photos. While it rises into view it sets --end (0 -> 1) on <html>,
 // which the page's fixed side info reads to blur and fade out.
@@ -42,7 +42,7 @@ export default function Cta({ children, next, lang }: { children: string; next: 
 
   return (
     <section ref={box} className="flex min-h-[70vh] w-full max-w-6xl flex-col items-center justify-center gap-32 py-16 text-center">
-      <h2 className="font-display text-[clamp(1.75rem,4.7vw,4.7rem)] leading-none">{children}</h2>
+      <h2 className="font-display text-[clamp(1.75rem,4.7vw,4.7rem)] leading-none">{plain(children)}</h2>
       <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
         <Link
           href={`/${lang}/contacts`}
