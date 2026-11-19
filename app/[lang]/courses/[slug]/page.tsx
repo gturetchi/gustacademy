@@ -31,11 +31,11 @@ export default async function Page({ params }: { params: Promise<{ lang: string;
         ))}
       </div>
       <Cta lang={lang} next={items[(items.indexOf(c) + 1) % items.length]}>{t.cta}</Cta>
-      <dl style={{ filter: "blur(calc(var(--end, 0) * 16px))", opacity: "calc(1 - var(--end, 0))" }} className="detail order-first z-10 grid w-full max-w-2xl grid-cols-[6rem_1fr] gap-x-4 gap-y-3 font-mono text-[10px] uppercase leading-4 tracking-wider xl:fixed xl:left-6 xl:top-[max(15rem,calc(50vh-11rem))] xl:order-none xl:w-[min(24rem,calc(50vw-23rem))]">
+      <dl style={{ filter: "blur(calc(var(--end, 0) * 16px))", opacity: "calc(1 - var(--end, 0))" }} className="detail order-first z-10 grid w-full max-w-2xl grid-cols-[6rem_1fr] gap-x-4 gap-y-3 font-mono text-[11px] uppercase leading-4 tracking-wider xl:fixed xl:left-6 xl:top-[max(15rem,calc(50vh-11rem))] xl:order-none xl:w-[min(24rem,calc(50vw-23rem))]">
         <dt className="opacity-60">{t.title}</dt>
         <dd>{c.title}</dd>
         <dt className="opacity-60">{t.description}</dt>
-        <dd className="text-[8px] leading-3">{c.description}</dd>
+        <dd className="text-[10px] leading-4">{c.description}</dd>
         <dt className="opacity-60">{t.teacher}</dt>
         <dd>{c.teacher}</dd>
         <dt className="opacity-60">{t.price}</dt>

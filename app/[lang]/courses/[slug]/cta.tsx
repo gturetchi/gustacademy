@@ -46,11 +46,11 @@ export default function Cta({ children, next, lang }: { children: string; next: 
       <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
         <Link
           href={`/${lang}/contacts`}
-          className="border border-white px-8 py-3 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-white hover:text-[#980001]"
+          className="border border-white px-8 py-3 font-mono text-[13px] uppercase tracking-widest transition-colors hover:bg-white hover:text-[#980001]"
         >
           {t.contactUs}
         </Link>
-        <Link href={`/${lang}/courses/${next.slug}`} className="group flex flex-col items-start font-mono text-xs uppercase tracking-widest">
+        <Link href={`/${lang}/courses/${next.slug}`} className="group flex flex-col items-start font-mono text-[13px] uppercase tracking-widest">
           <span className="opacity-60">{t.next}</span>
           <span className="mt-1 transition-transform duration-300 group-hover:translate-x-1">{next.title} →</span>
         </Link>

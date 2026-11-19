@@ -62,7 +62,7 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
-            <div className="absolute inset-x-6 bottom-6 flex items-end justify-between font-mono text-xs uppercase tracking-wider">
+            <div className="absolute inset-x-6 bottom-6 flex items-end justify-between font-mono text-[13px] uppercase tracking-wider">
               <a href="tel:+37360000154" className="font-bold">+373 60 000 154</a>
               <button
                 type="button"
@@ -118,7 +118,7 @@ export default function Navbar() {
           {/* halfway between the menu's right edge (~230px) and the centred audio button */}
           <a
             href="tel:+37360000154"
-            className={`pointer-events-auto absolute top-5 ${home ? "left-[calc(25%+65px)]" : "left-[calc(25%+115px)]"} -translate-x-1/2 font-mono font-bold text-[10px] uppercase leading-5 tracking-wider`}
+            className={`pointer-events-auto absolute top-5 ${home ? "left-[calc(25%+65px)]" : "left-[calc(25%+115px)]"} -translate-x-1/2 font-mono font-bold text-[11px] uppercase leading-5 tracking-wider`}
           >
             +373 60 000 154
           </a>
@@ -129,7 +129,7 @@ export default function Navbar() {
               setAudioOn(!audio);
             }}
             aria-pressed={audio}
-            className="pointer-events-auto absolute left-1/2 top-5 -translate-x-1/2 font-mono text-[10px] uppercase leading-5 tracking-wider"
+            className="pointer-events-auto absolute left-1/2 top-5 -translate-x-1/2 font-mono text-[11px] uppercase leading-5 tracking-wider"
           >
             {t.audio}: {audio ? t.on : t.off}
           </button>

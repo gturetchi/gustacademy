@@ -181,13 +181,13 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
               style={{ width: W, height: H, left: -W / 2, top: -H / 2 }}
             >
               {c.blurred ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-white p-4 text-center font-mono text-xs uppercase tracking-widest text-[#980001] md:text-sm">
+                <div className="absolute inset-0 flex items-center justify-center bg-white p-4 text-center font-mono text-[13px] uppercase tracking-widest text-[#980001] md:text-sm">
                   {t.soon}
                 </div>
               ) : (
                 (() => {
                 const img = (
-                  <img src={c.cover} alt="" draggable={false} className={`absolute inset-0 h-full w-full object-cover transition-[scale] duration-300 group-hover:scale-110`} style={{ transform: "scale(var(--zoom, 1))" }} />
+                  <img src={c.cover} alt="" draggable={false} className="absolute inset-0 h-full w-full object-cover grayscale transition-[scale] duration-300 group-hover:scale-110" style={{ transform: "scale(var(--zoom, 1))" }} />
                 );
                 return (
                   <Link href={`/${lang}/courses/${c.slug}`} draggable={false} aria-label={c.title} className="absolute inset-0">{img}</Link>
@@ -200,7 +200,7 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
       </div>
 
       {/* left meta */}
-      <dl key={active} className="detail absolute z-10 [filter:blur(var(--blur,0px))] left-6 top-[43%] hidden grid-cols-[6rem_1fr] gap-x-4 gap-y-6 font-mono text-[10px] uppercase tracking-wider md:grid">
+      <dl key={active} className="detail absolute z-10 [filter:blur(var(--blur,0px))] left-6 top-[43%] hidden grid-cols-[6rem_1fr] gap-x-4 gap-y-6 font-mono text-[11px] uppercase tracking-wider md:grid">
         <dt className="opacity-60">{t.startDate}</dt><dd>{it.blurred ? MASK : it.start}</dd>
         <dt className="opacity-60">{t.lessons}</dt><dd>{it.blurred ? MASK : `${it.lessons} / ${+(it.hours / it.lessons).toFixed(1)}h`}</dd>
         <dt className="opacity-60">{t.weeks}</dt><dd>{it.blurred ? MASK : it.weeks}</dd>
@@ -212,9 +212,9 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
         style={{ "--t": `calc(50% + ${2 * ROW - 48}px)` } as React.CSSProperties} // same level as the last visible row of the right list (-mt-12 offset)
         aria-live="polite"
       >
-        <span className="hidden font-mono text-[10px] uppercase tracking-wider opacity-60 md:inline">{t.selected}</span>
+        <span className="hidden font-mono text-[11px] uppercase tracking-wider opacity-60 md:inline">{t.selected}</span>
         <span className="font-display text-[64px] leading-none tabular-nums md:text-[96px]">{pad(active + 1)}</span>
-        <span className="pb-3 font-mono text-[10px] tabular-nums">/{pad(N)}</span>
+        <span className="pb-3 font-mono text-[11px] tabular-nums">/{pad(N)}</span>
       </div>
 
       {/* right roller: rows slide with the carousel, current one centred */}
@@ -231,9 +231,9 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
             {(() => {
               const body = (
                 <>
-                  <span className="block font-mono text-xs uppercase tracking-wider">{c.blurred ? MASK : c.teacher}</span>
+                  <span className="block font-mono text-[13px] uppercase tracking-wider">{c.blurred ? MASK : c.teacher}</span>
                   <span className="mt-1 block text-3xl uppercase tracking-wide">{c.blurred ? <Glitch len={Math.max(c.title.length, 6)} /> : plain(c.title)}</span>
-                  <span className="mt-2 block font-mono text-xs leading-5">{c.blurred ? MASK : c.text}</span>
+                  <span className="mt-2 block font-mono text-[13px] leading-5">{c.blurred ? MASK : c.text}</span>
                 </>
               );
               return c.blurred ? (
@@ -248,12 +248,12 @@ export default function Carousel({ items, lang }: { items: Course[]; lang: Lang 
 
       {/* phones: the roller is hidden, so the selected course's details sit at the bottom */}
       <div key={`m${active}`} className="detail absolute inset-x-6 z-10 text-center [filter:blur(var(--blur,0px))] md:hidden" style={{ top: `calc(50% + ${H / 2 + 90}px)` }}>
-        <span className="block font-mono text-xs uppercase tracking-wider">{it.blurred ? MASK : it.teacher}</span>
+        <span className="block font-mono text-[13px] uppercase tracking-wider">{it.blurred ? MASK : it.teacher}</span>
         <span className="mt-1 block text-2xl uppercase tracking-wide">{it.blurred ? <Glitch len={Math.max(it.title.length, 6)} /> : plain(it.title)}</span>
-        <span className="mt-2 block font-mono text-xs leading-5">{it.blurred ? MASK : it.text}</span>
+        <span className="mt-2 block font-mono text-[13px] leading-5">{it.blurred ? MASK : it.text}</span>
       </div>
 
-      <p className="absolute bottom-3 left-6 font-mono text-[10px] uppercase tracking-wider opacity-60">{t.scroll}</p>
+      <p className="absolute bottom-3 left-6 font-mono text-[11px] uppercase tracking-wider opacity-60">{t.scroll}</p>
     </main>
   );
 }

@@ -9,7 +9,7 @@ const List = ({
   align: string;
 }) => (
   <ul
-    className={`flex flex-col gap-4 font-mono text-xs uppercase leading-5 tracking-wider lg:w-52 ${align}`}
+    className={`flex flex-col gap-4 font-mono text-[13px] uppercase leading-5 tracking-wider lg:w-52 ${align}`}
   >
     {items.map(([name, role]) => (
       <li key={name}>
@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[#980001] px-6 pb-10 pt-32 text-white">
       <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:justify-center">
         <div className="flex flex-col gap-6 text-center lg:text-right">
-          <p className="font-mono text-xs uppercase leading-5 tracking-wider lg:w-52">
+          <p className="font-mono text-[13px] uppercase leading-5 tracking-wider lg:w-52">
             {t.aboutIntro}
           </p>
           <List items={team.slice(0, 3)} align="text-center lg:text-right" />
@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: Promise<{ lang: string 
         <List items={team.slice(3)} align="text-center lg:text-left" />
       </div>
       <section className="flex max-w-[42.67rem] flex-col items-center gap-3 text-center">
-        <p className="font-mono text-xs leading-5 text-white/80">
+        <p className="font-mono text-[13px] leading-5 text-white/80">
           {t.aboutOutro}
         </p>
       </section>
